@@ -1,12 +1,13 @@
-package com.example.opiniaodetudo
+package com.example.opiniaodetudo.View
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.opiniaodetudo.R
 import com.example.opiniaodetudo.model.ReviewRepository
-import com.example.opiniaodetudo.model.test
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
             val review = textViewReview.text
             if (ReviewRepository.instance.save(name.toString(), review.toString())) {
                 Toast.makeText(this, "Registrado com sucesso", Toast.LENGTH_LONG).show()
+                startActivity(Intent(this, ListActivity::class.java))
             } else {
                 Toast.makeText(this, "Erro ao registrar", Toast.LENGTH_LONG).show()
             }
