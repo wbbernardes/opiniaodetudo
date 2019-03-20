@@ -28,4 +28,8 @@ class ReviewRepository {
     fun listAll(): List<Review> {
         return reviewDao.listAll()
     }
+
+    fun delete(item: Review) {
+        reviewDao.delete(item)
+    }
 }
