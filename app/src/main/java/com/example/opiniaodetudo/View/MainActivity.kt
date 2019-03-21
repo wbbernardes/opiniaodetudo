@@ -4,9 +4,12 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import com.example.opiniaodetudo.R
+import com.example.opiniaodetudo.model.Review
 import com.example.opiniaodetudo.model.ReviewRepository
 
 class MainActivity : AppCompatActivity() {
@@ -16,27 +19,45 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val buttonSave = findViewById<Button>(R.id.bt_record)
-        val name = findViewById<EditText>(R.id.et_nameInfor)
-        val review = findViewById<EditText>(R.id.et_op)
+        val textViewName = findViewById<EditText>(R.id.et_nameInfor)
+        val textViewReview = findViewById<EditText>(R.id.et_op)
+
+        val reviewToEdit = (intent?.getSerializableExtra("item") as Review?)?.also { review ->
+            textViewName.setText(review.name)
+            textViewReview.setText(review.review)
+        }
 
         buttonSave.setOnClickListener {
+            val name = textViewName.text
+            val review = textViewReview.text
             object: AsyncTask<Void, Void, Unit>() {
-
                 override fun doInBackground(vararg params: Void?) {
-
                     val repository = ReviewRepository(this@MainActivity.applicationContext)
-                    repository.save(name.text.toString(), review.text.toString())
-                    startActivity(Intent(this@MainActivity, ListActivity::class.java))
+                    if(reviewToEdit == null){
+                        repository.save(name.toString(), review.toString())
+                        startActivity(Intent(this@MainActivity, ListActivity::class.java))
+                    }else{
+                        repository.update(reviewToEdit.id, name.toString(), review.toString())
+                        finish()
+                    }
                 }
             }.execute()
-//            val name = textViewName.text
-//            val review = textViewReview.text
-//            if (ReviewRepository.instance.save(name.toString(), review.toString())) {
-//                Toast.makeText(this, "Registrado com sucesso", Toast.LENGTH_LONG).show()
-//                startActivity(Intent(this, ListActivity::class.java))
-//            } else {
-//                Toast.makeText(this, "Erro ao registrar", Toast.LENGTH_LONG).show()
-//            }
         }
+
+
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item?.itemId == R.id.menu_list_reviews){
+            startActivity(Intent(this, ListActivity::class.java))
+            return true
+        }
+        return false
+    }
+
 }

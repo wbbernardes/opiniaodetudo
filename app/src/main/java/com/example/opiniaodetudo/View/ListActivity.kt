@@ -23,14 +23,36 @@ class ListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_list)
         val listView = findViewById<ListView>(R.id.list_recyclerview)
         this.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        val repo = ReviewRepository(this@ListActivity.applicationContext)
+//        reviews = repo.listAll().toMutableList()
         initList(listView)
         configureOnLongClick(listView)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        object : AsyncTask<Unit, Void, Unit>() {
+            override fun doInBackground(vararg params: Unit?) {
+                this@ListActivity.reviews = ReviewRepository(this@ListActivity.applicationContext)
+                    .listAll().toMutableList()
+            }
+            override fun onPostExecute(result: Unit?) {
+                val listView = findViewById<ListView>(R.id.list_recyclerview)
+                val adapter = listView.adapter as ArrayAdapter<Review>
+                adapter.notifyDataSetChanged()
+            }
+        }.execute()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
     private fun initList(listView: ListView) {
         object: AsyncTask<Void, Void, ArrayAdapter<Review>>() {
             override fun doInBackground(vararg params: Void?): ArrayAdapter<Review> {
-                val reviews = ReviewRepository(this@ListActivity.applicationContext)
+                reviews = ReviewRepository(this@ListActivity.applicationContext)
                     .listAll().toMutableList()
                 val adapter =
                     object : ArrayAdapter<Review>(this@ListActivity, -1, reviews ){
@@ -78,12 +100,19 @@ class ListActivity : AppCompatActivity() {
             popupMenu.setOnMenuItemClickListener {
                 when(it.itemId){
                     R.id.item_list_delete -> this@ListActivity.delete(reviews[position])
+                    R.id.item_list_edit -> this@ListActivity.openItemForEdition(reviews[position])
                 }
                 true
             }
             popupMenu.show()
             true
         }
+    }
+
+    private fun openItemForEdition(item: Review) {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("item", item)
+        startActivity(intent)
     }
 
 

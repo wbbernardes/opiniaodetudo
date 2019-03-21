@@ -2,5 +2,5 @@
     <string name="app_name">OpiniaoDeTudo</string>
     <string name="item_list_edit">Editar</string>
     <string name="item_list_delete">Deletar</string>
-
+    <string name="menu_list_reviews_label">Menu</string>
 </resources>
