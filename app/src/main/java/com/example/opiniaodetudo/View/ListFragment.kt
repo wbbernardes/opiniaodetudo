@@ -21,9 +21,7 @@ class ListFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.activity_list, null)
-        val repo = ReviewRepository(activity!!.applicationContext)
-        reviews = repo.listAll().toMutableList()
+        rootView = inflater.inflate(R.layout.list_review_activity, null)
         val listView = rootView.findViewById<ListView>(R.id.list_recyclerview)
         initList(listView)
         configureOnLongClick(listView)
