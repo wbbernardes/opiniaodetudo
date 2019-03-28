@@ -22,16 +22,24 @@ class MainActivity : AppCompatActivity() {
     private val fragments = mapOf(FORM_FRAGMENT to ::FormFragment, LIST_FRAGMENT  to ::ListFragment)
 
     companion object {
-        val FORM_FRAGMENT = "formFragment"
-        val LIST_FRAGMENT = "listFragment"
+        val FORM_FRAGMENT = R.id.menuitem_newitem
+        val LIST_FRAGMENT = R.id.menuitem_listitem
     }
 
-    fun navigateTo(item: String) {
+    fun navigateTo(item: Int) {
+
+        this.runOnUiThread {
+            val bottomNavigationMenu = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+            val menuItem = bottomNavigationMenu.menu.findItem(item)
+
+            menuItem.isChecked = true
+        }
+
         val fragmentInstance: Fragment = fragments[item]?.invoke()!!
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragmentInstance)
-            .addToBackStack(item)
+//            .addToBackStack(null)
             .commit()
     }
 

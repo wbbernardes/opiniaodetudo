@@ -37,12 +37,17 @@ class FormFragment :Fragment() {
                     val repository = ReviewRepository(activity!!.applicationContext)
                     if (reviewToEdit == null) {
                         repository.save(name.toString(), review.toString())
-                        val i = Intent(activity!!.applicationContext, ListActivity::class.java)
-                        startActivity(i)
-                    } else {
-                        repository.update(reviewToEdit.id, name.toString(), review.toString())
-                        activity!!.finish()
+//                        val i = Intent(activity!!.applicationContext, ListActivity::class.java)
+//                        startActivity(i)
+
+//                    } else {
+//                        repository.update(reviewToEdit.id, name.toString(), review.toString())
+//                        activity!!.finish()
                     }
+                }
+
+                override fun onPostExecute(result: Unit?) {
+                    (activity as MainActivity).navigateTo(MainActivity.LIST_FRAGMENT)
                 }
             }.execute()
             true
