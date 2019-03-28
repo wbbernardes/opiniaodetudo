@@ -1,25 +1,17 @@
 package com.example.opiniaodetudo.View
 
 import android.content.Context
-import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
 import com.example.opiniaodetudo.R
-import com.example.opiniaodetudo.model.Review
-import com.example.opiniaodetudo.model.ReviewRepository
 
 class MainActivity : AppCompatActivity() {
 
-    private val fragments = mapOf(FORM_FRAGMENT to ::FormFragment, LIST_FRAGMENT  to ::ListFragment)
+    private val fragments = mapOf(FORM_FRAGMENT to ::FormFragment, LIST_FRAGMENT to ::ListFragment)
 
     companion object {
         val FORM_FRAGMENT = R.id.menuitem_newitem
@@ -50,7 +42,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.menuitem_newitem -> navigateTo(FORM_FRAGMENT)
                 R.id.menuitem_listitem -> navigateTo(LIST_FRAGMENT)
             }
-            true }
+            true
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,5 +61,4 @@ class MainActivity : AppCompatActivity() {
             imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
         }
     }
-
 }

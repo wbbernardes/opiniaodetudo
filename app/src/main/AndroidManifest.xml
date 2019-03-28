@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".View.ListActivity">
         </activity>
-        <activity android:name=".View.MainActivity">
+        <activity android:name=".View.MainActivity" android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

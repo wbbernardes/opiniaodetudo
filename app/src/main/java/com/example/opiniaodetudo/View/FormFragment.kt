@@ -47,7 +47,9 @@ class FormFragment :Fragment() {
                 }
 
                 override fun onPostExecute(result: Unit?) {
-                    (activity as MainActivity).navigateTo(MainActivity.LIST_FRAGMENT)
+                    if (requireActivity() is MainActivity) {
+                        (activity as MainActivity).navigateTo(MainActivity.LIST_FRAGMENT)
+                    }
                 }
             }.execute()
             true
