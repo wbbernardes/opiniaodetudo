@@ -20,9 +20,8 @@ class ReviewRepository {
 
 //    private val data = mutableListOf<Review>()
 
-    fun save(name: String, review: String) {
-//        return data.add(Review(UUID.randomUUID().toString(), name, review))
-        reviewDao.save(Review(UUID.randomUUID().toString(), name, review))
+    fun save(name: String, review: String, photoPath: String?, thumbnailBytes: ByteArray?) {
+        reviewDao.save(Review(UUID.randomUUID().toString(), name, review, photoPath, thumbnailBytes))
     }
 
     fun listAll(): List<Review> {
