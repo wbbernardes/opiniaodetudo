@@ -3,6 +3,8 @@ package com.example.opiniaodetudo.View
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.widget.PopupMenu
@@ -12,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import com.example.opiniaodetudo.R
@@ -74,7 +77,13 @@ class ListFragment: Fragment() {
                                 .findViewById<TextView>(R.id.item_review)
                             textViewName.text = item.name
                             textViewReview.text = item.review
+                            if(item.thumbnails != null){
+                                val thumbnail = itemView.findViewById<ImageView>(R.id.thumbnail)
+                                val bitmap = BitmapFactory.decodeByteArray(item.thumbnails, 0, item.thumbnails.size)
+                                thumbnail.setImageBitmap(bitmap)
+                            }
                             return itemView
+
                         }
                     }
                 return adapter
@@ -126,10 +135,17 @@ class ListFragment: Fragment() {
         listView.setOnItemLongClickListener { _, view, position, _ ->
             val popupMenu = PopupMenu(activity!!, view)
             popupMenu.inflate(R.menu.list_review_item_menu)
+            reviews[position].apply{
+                if(latitude != null && longitude != null){
+                    val item = popupMenu.menu.findItem(R.id.item_list_map)
+                    item.isVisible = true
+                }
+            }
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.item_list_delete -> askForDelete(reviews[position])
                     R.id.item_list_edit -> openItemForEdition(reviews[position])
+                    R.id.item_list_map -> openMap(reviews[position])
                 }
                 true
             }
@@ -149,5 +165,11 @@ class ListFragment: Fragment() {
             }
             .create()
             .show()
+    }
+
+    private fun openMap(review: Review) {
+        val uri = Uri.parse("geo:${review.latitude},${review.longitude}")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        activity!!.startActivity(intent)
     }
 }

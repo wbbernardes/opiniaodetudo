@@ -1,12 +1,17 @@
 package com.example.opiniaodetudo.View
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.example.opiniaodetudo.R
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         val FORM_FRAGMENT = R.id.menuitem_newitem
         val LIST_FRAGMENT = R.id.menuitem_listitem
+        val GPS_PERMISSION_REQUEST: Int = 0
     }
 
     fun navigateTo(item: Int) {
@@ -35,6 +41,30 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    private fun askForGPSPermission() {
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                MainActivity.GPS_PERMISSION_REQUEST
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode){
+            GPS_PERMISSION_REQUEST -> {
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this,
+                        "Permissão para usar o GPS concedida",
+                        Toast.LENGTH_SHORT)
+                        .show()
+                } }
+        } }
+
     private fun configureBottomMenu() {
         val bottomNavigationMenu = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationMenu.setOnNavigationItemSelectedListener {
@@ -52,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         navigateTo(FORM_FRAGMENT)
         configureBottomMenu()
         configureAutoHiddenKeyboard()
+        askForGPSPermission()
     }
 
     private fun configureAutoHiddenKeyboard() {

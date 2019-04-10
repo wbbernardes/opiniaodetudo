@@ -32,10 +32,10 @@ class EditDialogFragment : DialogFragment() {
         val viewModel = ViewModelProviders.of(activity!!).get(EditReviewViewModel::class.java)
         var review = viewModel.data.value!!
         button.setOnClickListener {
-            val review = Review(review.id, textName.text.toString(), textReview.text.toString())
+            val review = Review(review.id, textName.text.toString(), textReview.text.toString(), null, null, null, null)
             object: AsyncTask<Void, Void, Unit>(){
                 override fun doInBackground(vararg params: Void?) {
-                    ReviewRepository(activity!!.applicationContext).update(review)
+                    ReviewRepository(activity!!.applicationContext).update(review.id, review.name, review.review)
                 }
 
                 override fun onPostExecute(result: Unit?) {

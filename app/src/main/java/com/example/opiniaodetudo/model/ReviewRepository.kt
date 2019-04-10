@@ -20,8 +20,11 @@ class ReviewRepository {
 
 //    private val data = mutableListOf<Review>()
 
-    fun save(name: String, review: String, photoPath: String?, thumbnailBytes: ByteArray?) {
-        reviewDao.save(Review(UUID.randomUUID().toString(), name, review, photoPath, thumbnailBytes))
+    fun save(name: String, review: String, photoPath: String?, thumbnailBytes: ByteArray?): Review {
+        val entity = Review(UUID.randomUUID().toString(),
+            name, review, photoPath, thumbnailBytes)
+        reviewDao.save(entity)
+        return entity
     }
 
     fun listAll(): List<Review> {
@@ -32,7 +35,15 @@ class ReviewRepository {
         reviewDao.delete(item)
     }
 
-    fun update(review:Review) {
-        reviewDao.update(review)
+    fun update(id: String, name: String, review: String): Review {
+        val entity = Review(id, name, review, null, null, null, null)
+        reviewDao.update(entity)
+        return entity
+    }
+
+    fun updateLocation(entity: Review, lat: Double, long: Double) {
+        entity.latitude = lat
+        entity.longitude = long
+        reviewDao.update(entity)
     }
 }
