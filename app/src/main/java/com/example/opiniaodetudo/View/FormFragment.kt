@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
+import android.util.Log
 import android.view.*
 import android.widget.*
 import com.example.opiniaodetudo.R
@@ -115,6 +116,7 @@ class FormFragment :Fragment() {
     }
 
     private fun updateReviewLocation(entity: Review) {
+        Log.d("XPTO", (activity != null).toString())
         LocationService(activity!!).onLocationObtained{ lat,long ->
             val repository = ReviewRepository(activity!!.applicationContext)
             object: AsyncTask<Void, Void, Unit>() {

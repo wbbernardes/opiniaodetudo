@@ -6,6 +6,10 @@
             android:title="@string/new_item" />
     <item
             android:id="@+id/menuitem_listitem"
-            android:icon="@android:drawable/ic_menu_sort_by_size"
+            android:icon="@drawable/iconmenu_list"
             android:title="@string/list_item" />
+    <item
+            android:id="@+id/menuitem_settings"
+            android:icon="@drawable/icon_settings"
+            android:title="@string/settings" />
 </menu>

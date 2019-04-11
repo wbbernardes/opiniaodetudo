@@ -10,11 +10,11 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_new"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppThemeNight.NoActionBar">
         <activity android:name=".View.ListActivity">
         </activity>
         <activity android:name=".View.MainActivity" android:windowSoftInputMode="adjustPan">

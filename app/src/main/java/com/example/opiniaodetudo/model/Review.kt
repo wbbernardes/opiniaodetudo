@@ -14,7 +14,7 @@ data class Review(
     @PrimaryKey
     val id: String,
     val name: String,
-    val review: String,
+    val review: String?,
     @ColumnInfo(name="photo_path")
     val photoPath: String?,
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)

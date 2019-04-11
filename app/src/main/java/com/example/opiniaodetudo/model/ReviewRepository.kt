@@ -35,7 +35,7 @@ class ReviewRepository {
         reviewDao.delete(item)
     }
 
-    fun update(id: String, name: String, review: String): Review {
+    fun update(id: String, name: String, review: String?): Review {
         val entity = Review(id, name, review, null, null, null, null)
         reviewDao.update(entity)
         return entity

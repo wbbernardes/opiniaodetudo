@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 
 class LocationService(val context: Context) {
+
     fun onLocationObtained(callback: (Double, Double) -> Unit) {
         val locationManager = context
             .getSystemService(Context.LOCATION_SERVICE) as LocationManager

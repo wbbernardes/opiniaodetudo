@@ -9,4 +9,7 @@
     <string name="delete_confirmation">Deletar</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
+    <string name="night_mode">Modo Noturno</string>
+    <string name="summary_night_mode">No modo noturno as cores do aplicativo ficam escuras</string>
+    <string name="settings">Configurações</string>
 </resources>

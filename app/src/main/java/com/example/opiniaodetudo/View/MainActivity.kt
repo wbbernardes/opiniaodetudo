@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
@@ -16,12 +17,16 @@ import com.example.opiniaodetudo.R
 
 class MainActivity : AppCompatActivity() {
 
-    private val fragments = mapOf(FORM_FRAGMENT to ::FormFragment, LIST_FRAGMENT to ::ListFragment)
+    private val fragments = mapOf(
+        FORM_FRAGMENT to ::FormFragment,
+        LIST_FRAGMENT  to ::ListFragment,
+        SETTINGS_FRAGMENT to ::SettingsFragment)
 
     companion object {
         val FORM_FRAGMENT = R.id.menuitem_newitem
         val LIST_FRAGMENT = R.id.menuitem_listitem
         val GPS_PERMISSION_REQUEST: Int = 0
+        val SETTINGS_FRAGMENT = R.id.menuitem_settings
     }
 
     fun navigateTo(item: Int) {
@@ -37,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragmentInstance)
-//            .addToBackStack(null)
             .commit()
     }
 
@@ -71,6 +75,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menuitem_newitem -> navigateTo(FORM_FRAGMENT)
                 R.id.menuitem_listitem -> navigateTo(LIST_FRAGMENT)
+                R.id.menuitem_settings -> navigateTo(SETTINGS_FRAGMENT)
             }
             true
         }
@@ -78,8 +83,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        chooseTheme()
         setContentView(R.layout.activity_main)
-        navigateTo(FORM_FRAGMENT)
+
+        if(savedInstanceState == null){
+            navigateTo(FORM_FRAGMENT)
+        }
+
         configureBottomMenu()
         configureAutoHiddenKeyboard()
         askForGPSPermission()
@@ -91,5 +101,19 @@ class MainActivity : AppCompatActivity() {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
         }
+    }
+
+    private fun chooseTheme() {
+        val nightMode = PreferenceManager.getDefaultSharedPreferences(this)
+            .getBoolean(SettingsFragment.NIGHT_MODE_PREF, false)
+        if(nightMode) {
+            setTheme(R.style.AppThemeNight_NoActionBar)
+        } else {
+            setTheme(R.style.AppTheme_NoActionBar)
+        }
+    }
+
+    fun setNightMode(){
+        recreate()
     }
 }
