@@ -11,6 +11,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        //this.onCreatePreferences(savedInstanceState, rootKey)
         setPreferencesFromResource(R.xml.nightmode, rootKey)
         configNightMode()
     }
