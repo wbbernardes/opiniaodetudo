@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="toolbarNavigationButtonStyle">@style/CustomActionBarTheme</item>
     </style>
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
@@ -15,10 +16,25 @@
 
     <style name="AppThemeNight" parent="Theme.AppCompat">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="toolbarNavigationButtonStyle">@style/CustomActionBarTheme</item>
     </style>
     <style name="AppThemeNight.NoActionBar" parent="AppThemeNight">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <!--10.16-->
+    <style name="TextAppearance.Design.CollapsingToolbar.Expanded.Custom"
+           parent="TextAppearance.Design.CollapsingToolbar.Expanded">
+        <item name="android:textColor">@color/night_textColor</item>
+    </style>
+    <style name="TextAppearance.AppCompat.Widget.ActionBar.Title.Custom"
+           parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="CustomActionBarTheme"
+           parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:tint">@android:color/white</item>
     </style>
 
 </resources>

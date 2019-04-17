@@ -33,6 +33,7 @@ class ListFragment: Fragment() {
         initList(listView)
         configureOnLongClick(listView)
         configureListObserver()
+        configureOnClick(listView)
         return rootView
     }
 
@@ -171,5 +172,15 @@ class ListFragment: Fragment() {
         val uri = Uri.parse("geo:${review.latitude},${review.longitude}")
         val intent = Intent(Intent.ACTION_VIEW, uri)
         activity!!.startActivity(intent)
+    }
+
+    private fun configureOnClick(listView: ListView) {
+        listView.setOnItemClickListener { parent, view, position, id ->
+            val reviewViewModel =
+                ViewModelProviders.of(activity!!).get(EditReviewViewModel::class.java)
+            val data = reviewViewModel.data
+            data.value = reviews[position]
+            (activity!! as MainActivity).navigateWithBackStack(ShowReviewFragment())
+        }
     }
 }

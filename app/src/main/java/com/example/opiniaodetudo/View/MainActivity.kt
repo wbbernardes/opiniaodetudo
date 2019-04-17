@@ -9,6 +9,7 @@ import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.inputmethod.InputMethodManager
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigateTo(item: Int) {
-
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         this.runOnUiThread {
             val bottomNavigationMenu = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
             val menuItem = bottomNavigationMenu.menu.findItem(item)
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         val fragmentInstance: Fragment = fragments[item]?.invoke()!!
         supportFragmentManager
             .beginTransaction()
+            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
             .replace(R.id.fragment_container, fragmentInstance)
             .commit()
     }
@@ -115,5 +117,21 @@ class MainActivity : AppCompatActivity() {
 
     fun setNightMode(){
         recreate()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        supportFragmentManager.popBackStack()
+        return true
+    }
+    fun navigateWithBackStack(destiny: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out,
+                android.R.anim.slide_in_left,
+                android.R.anim.slide_out_right)
+            .replace(R.id.fragment_container, destiny)
+            .addToBackStack(null)
+            .commit()
     }
 }
