@@ -9,4 +9,7 @@
             android:id="@+id/item_list_map"
             android:title="Mapa"
             android:visible="false" />
+    <item
+            android:id="@+id/item_list_upload"
+            android:title="@string/upload" />
 </menu>
