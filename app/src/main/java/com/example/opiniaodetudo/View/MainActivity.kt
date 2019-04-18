@@ -21,13 +21,15 @@ class MainActivity : AppCompatActivity() {
     private val fragments = mapOf(
         FORM_FRAGMENT to ::FormFragment,
         LIST_FRAGMENT  to ::ListFragment,
-        SETTINGS_FRAGMENT to ::SettingsFragment)
+        SETTINGS_FRAGMENT to ::SettingsFragment,
+        ONLINE_FRAGMENT to ::OnlineFragment)
 
     companion object {
-        val FORM_FRAGMENT = R.id.menuitem_newitem
-        val LIST_FRAGMENT = R.id.menuitem_listitem
-        val GPS_PERMISSION_REQUEST: Int = 0
-        val SETTINGS_FRAGMENT = R.id.menuitem_settings
+        const val FORM_FRAGMENT = R.id.menuitem_newitem
+        const val LIST_FRAGMENT = R.id.menuitem_listitem
+        const val GPS_PERMISSION_REQUEST = 1231
+        const val SETTINGS_FRAGMENT = R.id.menuitem_settings
+        const val ONLINE_FRAGMENT = R.id.menuitem_online
     }
 
     fun navigateTo(item: Int) {
@@ -74,11 +76,12 @@ class MainActivity : AppCompatActivity() {
     private fun configureBottomMenu() {
         val bottomNavigationMenu = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationMenu.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.menuitem_newitem -> navigateTo(FORM_FRAGMENT)
-                R.id.menuitem_listitem -> navigateTo(LIST_FRAGMENT)
-                R.id.menuitem_settings -> navigateTo(SETTINGS_FRAGMENT)
-            }
+            navigateTo(it.itemId)
+//            when (it.itemId) {
+//                R.id.menuitem_newitem -> navigateTo(FORM_FRAGMENT)
+//                R.id.menuitem_listitem -> navigateTo(LIST_FRAGMENT)
+//                R.id.menuitem_settings -> navigateTo(SETTINGS_FRAGMENT)
+//            }
             true
         }
     }
