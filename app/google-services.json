@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "694646955881",
+    "firebase_url": "https://opiniaodetudo.firebaseio.com",
+    "project_id": "opiniaodetudo",
+    "storage_bucket": "opiniaodetudo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694646955881:android:008703ea8f7e1dcf",
+        "android_client_info": {
+          "package_name": "com.example.opiniaodetudo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "694646955881-1ukd34osmvtb1vudniaq848d6ql176n1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpG4BcXlLgLf7z9vsZjtkit5SRebOOCag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "694646955881-1ukd34osmvtb1vudniaq848d6ql176n1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

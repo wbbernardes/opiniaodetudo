@@ -12,9 +12,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.opiniaodetudo.R
+import com.google.firebase.iid.FirebaseInstanceId
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         const val GPS_PERMISSION_REQUEST = 1231
         const val SETTINGS_FRAGMENT = R.id.menuitem_settings
         const val ONLINE_FRAGMENT = R.id.menuitem_online
+        const val PUSH_NOTIFICATION_MESSAGE_REQUEST = 1232
+        const val PUSH_NOTIFICATION_CHANNEL = "PushNotificationChannelNovo"
     }
 
     fun navigateTo(item: Int) {
@@ -98,6 +102,18 @@ class MainActivity : AppCompatActivity() {
         configureBottomMenu()
         configureAutoHiddenKeyboard()
         askForGPSPermission()
+        logToken()
+    }
+
+    private fun logToken() {
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("TOKEN_FCM", task.exception)
+            } else {
+                val token = task.result?.token
+                Log.d("TOKEN_FCM", "logToken:${token}")
+            }
+        }
     }
 
     private fun configureAutoHiddenKeyboard() {

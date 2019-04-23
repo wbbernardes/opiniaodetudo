@@ -9,6 +9,8 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.*
@@ -27,7 +29,8 @@ class FormFragment :Fragment() {
     private var thumbnailBytes: ByteArray? = null
 
     companion object {
-        val TAKE_PICTURE_RESULT = 101
+        const val TAKE_PICTURE_RESULT = 101
+        const val NEW_REVIEW_MESSAGE_ID = 4584
     }
     private var file: File? = null
 
@@ -67,6 +70,7 @@ class FormFragment :Fragment() {
                 }
                 override fun onPostExecute(result: Review) {
                     updateReviewLocation(result)
+                    showReviewNotification(result)
                 }
             }.execute()
             true
@@ -74,6 +78,37 @@ class FormFragment :Fragment() {
         configurePhotoClick()
         return mainView
 
+    }
+
+    private fun showReviewNotification(review: Review) {
+        val builder = NotificationCompat.Builder(
+            activity!!,
+            MainActivity.PUSH_NOTIFICATION_CHANNEL)
+            .setSmallIcon(R.drawable.abc_ratingbar_small_material)
+            .setContentTitle("Nova opinião no Opini")
+            .setContentText(review.name)
+        if(review.thumbnails != null){
+            val thumbnail =
+                BitmapFactory
+                    .decodeByteArray(review.thumbnails, 0, review.thumbnails!!.size)
+            val photo =
+                BitmapFactory
+                    .decodeFile(File(activity!!.filesDir, review.photoPath).absolutePath)
+            builder.setLargeIcon(thumbnail)
+            builder.setStyle(
+                NotificationCompat.BigPictureStyle()
+                    .bigPicture(photo)
+                    .bigLargeIcon(null)
+            )
+        }else{
+            builder.setStyle(
+                NotificationCompat.BigTextStyle()
+                    .setBigContentTitle(review.name)
+                    .bigText(review.review)
+            )
+        }
+        NotificationManagerCompat
+            .from(activity!!).notify(NEW_REVIEW_MESSAGE_ID, builder.build())
     }
 
     private fun generateThumbnailBytes(thumbnail: Bitmap, targetSize: Int) {

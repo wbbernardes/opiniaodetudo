@@ -10,8 +10,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.opiniaodetudo.R
 import com.example.opiniaodetudo.model.Review
-import com.example.opiniaodetudo.service.BASE_URL
-import com.example.opiniaodetudo.service.REVIEWS_URI
+import com.example.opiniaodetudo.util.BASE_URL
+import com.example.opiniaodetudo.util.REVIEWS_URI
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
