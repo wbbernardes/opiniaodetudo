@@ -18,12 +18,20 @@
         android:theme="@style/AppThemeNight.NoActionBar">
         <activity android:name=".View.ListActivity">
         </activity>
-        <activity android:name=".View.MainActivity" android:windowSoftInputMode="adjustPan" android:launchMode="singleTask">
+        <activity
+                android:name=".View.SplashScreenActivity"
+                android:theme="@style/AppSplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".View.MainActivity" android:windowSoftInputMode="adjustPan" android:launchMode="singleTask">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

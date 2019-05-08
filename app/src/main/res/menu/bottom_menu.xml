@@ -16,4 +16,8 @@
             <!--android:id="@+id/menuitem_online"-->
             <!--android:icon="@drawable/iconmenu_list"-->
             <!--android:title="Online" />-->
+    <item
+        android:id="@+id/menuitem_about"
+        android:icon="@android:drawable/ic_dialog_alert"
+        android:title="Sobre" />
 </menu>

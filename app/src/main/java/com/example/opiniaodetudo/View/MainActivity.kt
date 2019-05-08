@@ -26,14 +26,17 @@ class MainActivity : AppCompatActivity() {
         FORM_FRAGMENT to ::FormFragment,
         LIST_FRAGMENT  to ::ListFragment,
         SETTINGS_FRAGMENT to ::SettingsFragment,
-        ONLINE_FRAGMENT to ::OnlineFragment)
+        ABOUT_FRAGMENT to ::AboutFragment
+//        ONLINE_FRAGMENT to ::OnlineFragment
+    )
 
     companion object {
         const val FORM_FRAGMENT = R.id.menuitem_newitem
         const val LIST_FRAGMENT = R.id.menuitem_listitem
         const val GPS_PERMISSION_REQUEST = 1231
         const val SETTINGS_FRAGMENT = R.id.menuitem_settings
-        const val ONLINE_FRAGMENT = R.id.menuitem_online
+//        const val ONLINE_FRAGMENT = R.id.menuitem_online
+        const val ABOUT_FRAGMENT = R.id.menuitem_about
         const val PUSH_NOTIFICATION_MESSAGE_REQUEST = 1232
         const val PUSH_NOTIFICATION_CHANNEL = "PushNotificationChannelNovo"
         const val NEW_REVIEW_NOTIFICATION_MESSAGE_REQUEST = 1233
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity() {
         val mainContainer = findViewById<ConstraintLayout>(R.id.main_container)
         mainContainer.setOnTouchListener { v, event ->
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+            imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
     }
 
