@@ -2,6 +2,7 @@ package com.example.opiniaodetudo.View
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -16,6 +17,7 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.opiniaodetudo.R
+import com.example.opiniaodetudo.model.ReviewRepository
 import com.google.firebase.iid.FirebaseInstanceId
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         const val ONLINE_FRAGMENT = R.id.menuitem_online
         const val PUSH_NOTIFICATION_MESSAGE_REQUEST = 1232
         const val PUSH_NOTIFICATION_CHANNEL = "PushNotificationChannelNovo"
+        const val NEW_REVIEW_NOTIFICATION_MESSAGE_REQUEST = 1233
+        const val DELETE_NOTIFICATION_ACTION_NAME = "DELETE"
+        const val DELETE_NOTIFICATION_EXTRA_NAME = "REVIEW_TO_DELETE"
     }
 
     fun navigateTo(item: Int) {
@@ -103,6 +108,7 @@ class MainActivity : AppCompatActivity() {
         configureAutoHiddenKeyboard()
         askForGPSPermission()
         logToken()
+        deleteReview(intent)
     }
 
     private fun logToken() {
@@ -152,5 +158,17 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, destiny)
             .addToBackStack(null)
             .commit()
+    }
+
+    private fun deleteReview(intent: Intent?) {
+        if(intent?.action == DELETE_NOTIFICATION_ACTION_NAME){
+            val id = intent.getStringExtra(DELETE_NOTIFICATION_EXTRA_NAME)
+            ReviewRepository(this.applicationContext).deleteReview(id)
+        }
+    }
+
+    override fun onNewIntent(intentParam: Intent?) {
+        deleteReview(intentParam)
+        intent = intentParam
     }
 }

@@ -18,11 +18,16 @@
         android:theme="@style/AppThemeNight.NoActionBar">
         <activity android:name=".View.ListActivity">
         </activity>
-        <activity android:name=".View.MainActivity" android:windowSoftInputMode="adjustPan" android:launchMode="singleTop">
+        <activity android:name=".View.MainActivity" android:windowSoftInputMode="adjustPan" android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
         <provider
@@ -41,6 +46,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+        <receiver android:name=".View.ConnectivityReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.AIRPLANE_MODE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -17,4 +17,7 @@ interface ReviewDao {
     @Update
     fun update(review: Review)
 
+    @Query("DELETE FROM ${ReviewTableInfo.TABLE_NAME} WHERE ${ReviewTableInfo.COLUMN_ID} = :id")
+    fun deleteReview(id: String?)
+
 }

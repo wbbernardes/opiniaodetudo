@@ -1,10 +1,12 @@
 package com.example.opiniaodetudo.View
 
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,15 +14,19 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.content.FileProvider
+import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import android.view.*
 import android.widget.*
 import com.example.opiniaodetudo.R
 import com.example.opiniaodetudo.model.Review
 import com.example.opiniaodetudo.model.ReviewRepository
+import com.google.android.gms.common.util.IOUtils
+import kotlinx.android.synthetic.main.sub_show_review.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
 
 class FormFragment :Fragment() {
 
@@ -31,6 +37,7 @@ class FormFragment :Fragment() {
     companion object {
         const val TAKE_PICTURE_RESULT = 101
         const val NEW_REVIEW_MESSAGE_ID = 4584
+        const val GEOCODER_FINALIZED_ACTION = "com.androiddesenv.opiniaodetudo.GEOCODER_FINALIZED"
     }
     private var file: File? = null
 
@@ -46,7 +53,14 @@ class FormFragment :Fragment() {
         val reviewToEdit = (activity!!.intent?.getSerializableExtra("item") as Review?)?.also { review ->
             textViewName.setText(review.name)
             textViewReview.setText(review.review)
+
+            handleImageShare()
+            return mainView
+
         }
+
+
+
 
         buttonSave.setOnClickListener {
             val name = textViewName.text
@@ -59,7 +73,7 @@ class FormFragment :Fragment() {
                         entity = repository.save(
                             name.toString(),
                             review.toString(),
-                            file!!.toRelativeString(activity!!.filesDir),
+                            file?.toRelativeString(activity!!.filesDir),
                             thumbnailBytes
                         )
                     } else {
@@ -81,6 +95,17 @@ class FormFragment :Fragment() {
     }
 
     private fun showReviewNotification(review: Review) {
+        val deleteIntent = Intent(activity!!, MainActivity::class.java)
+        deleteIntent.action = MainActivity.DELETE_NOTIFICATION_ACTION_NAME
+        deleteIntent.putExtra(MainActivity.DELETE_NOTIFICATION_EXTRA_NAME, review.id)
+
+        val deletePendingIntent: PendingIntent =
+            PendingIntent.getActivity(
+                activity!!,
+                MainActivity.NEW_REVIEW_NOTIFICATION_MESSAGE_REQUEST,
+                deleteIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+
         val builder = NotificationCompat.Builder(
             activity!!,
             MainActivity.PUSH_NOTIFICATION_CHANNEL)
@@ -109,6 +134,8 @@ class FormFragment :Fragment() {
         }
         NotificationManagerCompat
             .from(activity!!).notify(NEW_REVIEW_MESSAGE_ID, builder.build())
+
+        builder.addAction(0, "Apagar", deletePendingIntent)
     }
 
     private fun generateThumbnailBytes(thumbnail: Bitmap, targetSize: Int) {
@@ -155,11 +182,44 @@ class FormFragment :Fragment() {
         LocationService(activity!!).onLocationObtained{ lat,long ->
             val repository = ReviewRepository(activity!!.applicationContext)
             object: AsyncTask<Void, Void, Unit>() {
+                override fun onPostExecute(result: Unit?) {
+                    val intent = Intent(GEOCODER_FINALIZED_ACTION)
+                    intent.putExtra("review", entity)
+                    LocalBroadcastManager.getInstance(activity!!).sendBroadcast(intent)
+                }
                 override fun doInBackground(vararg params: Void?) {
                     repository.updateLocation(entity, lat, long)
                 }
             }.execute()
         }
     }
+
+
+
+    fun handleImageShare() {
+        val intentParam = activity!!.intent
+        if(intentParam?.action == Intent.ACTION_SEND) {
+            intentParam?.extras.get(Intent.EXTRA_SUBJECT)?.let {
+                mainView.findViewById<EditText>(R.id.tv_name).setText(it as String)
+            }
+            intentParam?.extras.get(Intent.EXTRA_TEXT)?.let {
+                mainView.findViewById<EditText>(R.id.tv_op).setText(it as String)
+            }
+            intentParam?.extras.get(Intent.EXTRA_STREAM)?.let {
+                val fileName = "${System.nanoTime()}.jpg"
+                file = File(activity!!.filesDir, fileName)
+                IOUtils.copyStream(activity!!.contentResolver.openInputStream(it as Uri), FileOutputStream(file))
+                    val photoView = mainView.findViewById<ImageView>(R.id.iv_foto)
+                    val bitmap = BitmapFactory.decodeStream(FileInputStream(file))
+                val targetSize = 100
+                val thumbnail = ThumbnailUtils.extractThumbnail(
+                    bitmap,
+                    targetSize,
+                    targetSize
+                )
+                photoView.setImageBitmap(thumbnail)
+                generateThumbnailBytes(thumbnail, targetSize)
+            }
+        } }
 
 }

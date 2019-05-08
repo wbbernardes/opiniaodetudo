@@ -20,6 +20,10 @@ class ReviewRepository {
 
 //    private val data = mutableListOf<Review>()
 
+    fun deleteReview(id: String?) {
+        reviewDao.deleteReview(id)
+    }
+
     fun save(name: String, review: String, photoPath: String?, thumbnailBytes: ByteArray?): Review {
         val entity = Review(UUID.randomUUID().toString(),
             name, review, photoPath, thumbnailBytes)

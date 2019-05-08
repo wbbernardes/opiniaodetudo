@@ -2,7 +2,10 @@ package com.example.opiniaodetudo.View
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.AsyncTask
@@ -10,16 +13,15 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.PopupMenu
 import android.support.v4.app.Fragment
+import android.support.v4.content.FileProvider
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import com.example.opiniaodetudo.R
 import com.example.opiniaodetudo.model.Review
 import com.example.opiniaodetudo.model.ReviewRepository
@@ -33,6 +35,7 @@ import java.io.File
 class ListFragment: Fragment() {
     private lateinit var reviews: MutableList<Review>
     private lateinit var rootView: View
+    private lateinit var receiver: BroadcastReceiver
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -42,6 +45,7 @@ class ListFragment: Fragment() {
         configureOnLongClick(listView)
         configureListObserver()
         configureOnClick(listView)
+        registerGeocoderReturn()
         return rootView
     }
 
@@ -58,6 +62,11 @@ class ListFragment: Fragment() {
                 adapter.notifyDataSetChanged()
             }
         }.execute()
+    }
+
+    override fun onDestroyView(){
+        super.onDestroyView()
+        LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(receiver!!)
     }
 
     private fun configureListObserver() {
@@ -156,6 +165,7 @@ class ListFragment: Fragment() {
                     R.id.item_list_edit -> openItemForEdition(reviews[position])
                     R.id.item_list_map -> openMap(reviews[position])
                     R.id.item_list_upload -> uploadItem(reviews[position])
+                    R.id.item_list_share -> share(reviews[position])
                 }
                 true
             }
@@ -191,6 +201,20 @@ class ListFragment: Fragment() {
             data.value = reviews[position]
             (activity!! as MainActivity).navigateWithBackStack(ShowReviewFragment())
         }
+    }
+
+    private fun share(review: Review) {
+        val intent = Intent()
+        intent.action = Intent.ACTION_SEND
+        intent.type = "image/jpg"
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Opinião")
+        intent.putExtra(Intent.EXTRA_TEXT, "${review.name} = ${review.review}")
+        if(review.photoPath != null) {
+            val file = File(activity!!.filesDir, review.photoPath)
+            val uri = FileProvider.getUriForFile(activity!!, "com.androiddesenv.opiniaodetudo.fileprovider", file)
+                intent.putExtra(Intent.EXTRA_STREAM, uri)
+        }
+        startActivity(intent)
     }
 
     private fun uploadPhoto(idOnline: String,review: Review,client: OkHttpClient) {
@@ -270,6 +294,19 @@ class ListFragment: Fragment() {
                 }
             }
         }.execute()
+    }
+
+
+
+    private fun registerGeocoderReturn() {
+        this.receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val review = intent.getSerializableExtra("review") as Review
+                Toast.makeText(context, "Item ${review.name} com localização atualizada", Toast.LENGTH_LONG).show()
+                val listView = rootView.findViewById<ListView>(R.id.list_recyclerview)
+                initList(listView)
+            } }
+        LocalBroadcastManager.getInstance(activity!!).registerReceiver(receiver, IntentFilter(FormFragment.GEOCODER_FINALIZED_ACTION))
     }
 
 
