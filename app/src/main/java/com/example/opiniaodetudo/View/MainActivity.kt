@@ -172,6 +172,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intentParam: Intent?) {
         deleteReview(intentParam)
+
         intent = intentParam
+        Log.d("XPTO", "new intent ${intent.action}")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        handleImageShare(intent)
+    }
+
+    private fun handleImageShare(intent: Intent?) {
+        if(intent?.action == Intent.ACTION_SEND){
+            navigateTo(FORM_FRAGMENT)
+        }
     }
 }

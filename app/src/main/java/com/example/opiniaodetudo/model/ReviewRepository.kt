@@ -45,6 +45,13 @@ class ReviewRepository {
         return entity
     }
 
+    fun update(review: Review, name: String, reviewText: String?): Review {
+        val review1 =
+            Review(review.id, name, reviewText, review.photoPath, review.thumbnails, review.latitude, review.longitude)
+        reviewDao.update(review1)
+        return review1
+    }
+
     fun updateLocation(entity: Review, lat: Double, long: Double) {
         entity.latitude = lat
         entity.longitude = long

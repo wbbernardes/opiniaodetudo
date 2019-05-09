@@ -54,12 +54,10 @@ class FormFragment :Fragment() {
             textViewName.setText(review.name)
             textViewReview.setText(review.review)
 
-            handleImageShare()
+
             return mainView
 
         }
-
-
 
 
         buttonSave.setOnClickListener {
@@ -90,6 +88,7 @@ class FormFragment :Fragment() {
             true
         }
         configurePhotoClick()
+        handleImageShare()
         return mainView
 
     }
@@ -197,20 +196,33 @@ class FormFragment :Fragment() {
 
 
     fun handleImageShare() {
+
         val intentParam = activity!!.intent
+        Log.d("XPTO", "handleImageShare ${intentParam?.action}")
+
         if(intentParam?.action == Intent.ACTION_SEND) {
+
+            Log.d("XPTO", "handleImageShare is send")
             intentParam?.extras.get(Intent.EXTRA_SUBJECT)?.let {
                 mainView.findViewById<EditText>(R.id.tv_name).setText(it as String)
             }
+
             intentParam?.extras.get(Intent.EXTRA_TEXT)?.let {
                 mainView.findViewById<EditText>(R.id.tv_op).setText(it as String)
             }
+
             intentParam?.extras.get(Intent.EXTRA_STREAM)?.let {
+
+                Log.d("XPTO", "handleImageShare have photo")
+
                 val fileName = "${System.nanoTime()}.jpg"
                 file = File(activity!!.filesDir, fileName)
                 IOUtils.copyStream(activity!!.contentResolver.openInputStream(it as Uri), FileOutputStream(file))
                     val photoView = mainView.findViewById<ImageView>(R.id.iv_foto)
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(file))
+
+                Log.d("XPTO", "handleImageShare photo read")
+
                 val targetSize = 100
                 val thumbnail = ThumbnailUtils.extractThumbnail(
                     bitmap,
@@ -218,7 +230,9 @@ class FormFragment :Fragment() {
                     targetSize
                 )
                 photoView.setImageBitmap(thumbnail)
+                Log.d("XPTO", "handleImageShare thumbnail")
                 generateThumbnailBytes(thumbnail, targetSize)
+                Log.d("XPTO", "handleImageShare end")
             }
         } }
 
